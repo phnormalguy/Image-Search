@@ -1,0 +1,1 @@
+# job-salary-bkk-trend
