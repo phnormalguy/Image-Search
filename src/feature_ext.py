@@ -69,15 +69,12 @@ def visualize_images(images, labels, class_names, num_images=10):
             plt.axis('off')
         plt.show()
         
-        
-        
-if __name__ == "__main__":
-    model = ResNet18FeatureExtractor(pretrained=True)
-    
+
+def create_data():
     train_data = []
     train_labels = []
-    for batch in range(1,6):
-        batch_file = fbatch_file = f"/home/june/Documents/GitHub/Image-Search/src/dataset/cifar-10-python/cifar-10-batches-py/data_batch_{batch}"
+    for batch in range(1, 6):
+        batch_file = f"/home/june/Documents/GitHub/Image-Search/src/dataset/cifar-10-python/cifar-10-batches-py/data_batch_{batch}"
         batch_dict = unpickle(batch_file)
         train_data.append(batch_dict[b'data'])
         train_labels.extend(batch_dict[b'labels'])
@@ -85,16 +82,47 @@ if __name__ == "__main__":
     train_data = train_data.reshape(-1, 3, 32, 32).transpose(0, 2, 3, 1)
     train_labels = np.array(train_labels)
     cifar10_classes = [
-    "airplane", "automobile", "bird", "cat", "deer",
-    "dog", "frog", "horse", "ship", "truck"
-]
+        "airplane", "automobile", "bird", "cat", "deer",
+        "dog", "frog", "horse", "ship", "truck"
+    ]
     test_dict = unpickle("/home/june/Documents/GitHub/Image-Search/src/dataset/cifar-10-python/cifar-10-batches-py/test_batch")
     test_data = test_dict[b'data']
     test_data = test_data.reshape(-1, 3, 32, 32).transpose(0, 2, 3, 1)
     test_labels = np.array(test_dict[b'labels'])
-    
     print("Train data shape:", train_data.shape)
     print("Train labels shape:", train_labels.shape)
+    print("Test data shape:", test_data.shape)
+    print("Test labels shape:", test_labels.shape)
+    return train_data, train_labels, test_data, test_labels, cifar10_classes
+        
+        
+        
+if __name__ == "__main__":
+    model = ResNet18FeatureExtractor(pretrained=True)
+    
+    train_data, train_labels, test_data, test_labels, cifar10_classes = create_data()
+    
+#     train_data = []
+#     train_labels = []
+#     for batch in range(1,6):
+#         batch_file = fbatch_file = f"/home/june/Documents/GitHub/Image-Search/src/dataset/cifar-10-python/cifar-10-batches-py/data_batch_{batch}"
+#         batch_dict = unpickle(batch_file)
+#         train_data.append(batch_dict[b'data'])
+#         train_labels.extend(batch_dict[b'labels'])
+#     train_data = np.concatenate(train_data, axis=0)
+#     train_data = train_data.reshape(-1, 3, 32, 32).transpose(0, 2, 3, 1)
+#     train_labels = np.array(train_labels)
+#     cifar10_classes = [
+#     "airplane", "automobile", "bird", "cat", "deer",
+#     "dog", "frog", "horse", "ship", "truck"
+# ]
+#     test_dict = unpickle("/home/june/Documents/GitHub/Image-Search/src/dataset/cifar-10-python/cifar-10-batches-py/test_batch")
+#     test_data = test_dict[b'data']
+#     test_data = test_data.reshape(-1, 3, 32, 32).transpose(0, 2, 3, 1)
+#     test_labels = np.array(test_dict[b'labels'])
+    
+#     print("Train data shape:", train_data.shape)
+#     print("Train labels shape:", train_labels.shape)
 
 
  ## Normalize the images
@@ -118,18 +146,27 @@ if __name__ == "__main__":
     print("Type of test data tensor:", type(test_data_tensor)) 
 
     
-    print("After resizing, train data tensor shape:", sample_data.shape)
-    print("After resizing, test data tensor shape:", sample_test_data.shape)
     
     ## Visualize some images
     visualize_images(train_data, train_labels, cifar10_classes, num_images=10)
     
     
     ## Extract features using ResNet-18
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-    features = extract_features(model, train_data_tensor, batch_size=128, device=device)
-    print("All features shape:", features.shape)
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # model.to(device)
+    # features = extract_features(model, train_data_tensor, batch_size=128, device=device)
+    # print("All features shape:", features.shape)
+    
+    
+    
+    
+    ## Save the features and labels
+    # os.makedirs("features", exist_ok=True)
+    # features = features.numpy()
+    # np.save("features/train_features.npy", features)
+    # np.save("features/train_labels.npy", train_labels_tensor.numpy())
+    
+    ## Extract features for test data
     
     
 
