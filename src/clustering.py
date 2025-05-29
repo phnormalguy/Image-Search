@@ -159,6 +159,7 @@ async def upload_and_search_image(file: UploadFile = File(...)):
         "distances": distances[0].tolist(),
         "indices": indices[0].tolist(),
         "labels": labels.tolist(),
+        "cifar10_classes": [cifar10_classes[label] for label in labels],
         "images": image_base64_list,
         
         
